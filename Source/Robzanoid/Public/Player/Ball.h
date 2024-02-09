@@ -8,7 +8,13 @@
 #include "Ball.generated.h"
 
 
-UCLASS()
+// Forward Declarations
+class UProjectileMovementComponent;
+class USphereComponent;
+class UStaticMeshComponent;
+
+
+UCLASS(Blueprintable)
 class ROBZANOID_API ABall : public AActor
 {
 	GENERATED_BODY()
@@ -23,7 +29,19 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, Category = "Robzanoid|Components")
+	TObjectPtr<USphereComponent> Sphere = nullptr;
 
-private:	
+	UPROPERTY(VisibleAnywhere, Category = "Robzanoid|Components")
+	TObjectPtr<UStaticMeshComponent> StaticMesh = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = "Robzanoid|Components")
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+
+
+private:
+
+	UFUNCTION()
+	void OnSphereComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 };

@@ -13,13 +13,4 @@ class ROBZANOID_API ARobzanoidGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-
-public:
-
-
-protected:
-
-
-private:
-
 };

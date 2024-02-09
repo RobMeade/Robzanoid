@@ -5,11 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
+#include "Interfaces/ImpactableInterface.h"
+
 #include "Wall.generated.h"
 
 
+// Forward Declarations
+class UBoxComponent;
+class UStaticMeshComponent;
+
+
 UCLASS()
-class ROBZANOID_API AWall : public AActor
+class ROBZANOID_API AWall : public AActor, public IImpactableInterface
 {
 	GENERATED_BODY()
 
@@ -22,8 +29,9 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void Impact_Implementation() override;
 
-
-private:	
+	UPROPERTY(VisibleAnywhere, Category = "Robzanoid|Components")
+	TObjectPtr<UStaticMeshComponent> StaticMesh = nullptr;
 
 };

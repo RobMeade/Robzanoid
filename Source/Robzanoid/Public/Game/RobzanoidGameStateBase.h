@@ -13,13 +13,4 @@ class ROBZANOID_API ARobzanoidGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
 
-
-public:
-
-
-protected:
-
-
-private:
-
 };
