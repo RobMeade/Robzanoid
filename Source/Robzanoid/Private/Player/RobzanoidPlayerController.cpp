@@ -110,6 +110,17 @@ void ARobzanoidPlayerController::UpdateHUDScore(const int32 Score) const
 	}
 }
 
+void ARobzanoidPlayerController::SpawnBall() const
+{
+	if (GameInstance && Paddle)
+	{
+		if (GameInstance->GetCurrentGameplayState() != EGameplayState::GameOver && Paddle->GetPaddleState() == EPaddleLaunchState::PreparingToLaunch)
+		{
+			Paddle->SpawnBall();
+		}
+	}
+}
+
 
 /*
  * Private Methods
@@ -178,9 +189,9 @@ void ARobzanoidPlayerController::LaunchBall(const FInputActionValue& InputAction
 {
 	if (GameInstance && Paddle)
 	{
-		if (GameInstance->GetCurrentGameplayState() != EGameplayState::GameOver && Paddle->GetPaddleState() == EPaddleState::Setup)
+		if (GameInstance->GetCurrentGameplayState() != EGameplayState::GameOver && Paddle->GetPaddleState() == EPaddleLaunchState::ReadyToLaunch)
 		{
-			Paddle->SpawnBall();
+			Paddle->LaunchBall();
 		}
 	}
 }

@@ -24,10 +24,11 @@ enum class EBrickType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EPaddleState : uint8
+enum class EPaddleLaunchState : uint8
 {
-	Setup UMETA(DisplayName = "Setup"),
-	Active UMETA(DisplayName = "Active")
+	PreparingToLaunch UMETA(DisplayName = "Preparing To Launch"),
+	ReadyToLaunch UMETA(DisplayName = "Ready To Launch"),
+	Launched UMETA(DisplayName = "Launched")
 };
 
 

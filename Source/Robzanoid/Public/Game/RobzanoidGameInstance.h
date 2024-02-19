@@ -25,6 +25,7 @@ public:
 	URobzanoidGameInstance();
 
 	int32 GetDefaultPlayerLives() const { return DefaultPlayerLives; }
+	float GetDefaultBallSpeed() const { return DefaultBallSpeed; }
 	float GetPaddleSpeedMultiplier() const { return PaddleSpeedMultiplier; }
 	int32 GetMultiHitBrickStrengthIncreaseLevelInterval() const { return IncreaseMultiHitBrickStrengthLevelInterval; }
 	EGameplayState GetCurrentGameplayState() const { return CurrentGameplayState; }
@@ -61,6 +62,9 @@ private:
 	// Configuration Variables
 	UPROPERTY(EditDefaultsOnly, Category = "Robzanoid|Game Configuration")
 	int32 DefaultPlayerLives = 3;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Robzanoid|Game Configuration")
+	float DefaultBallSpeed = 1500.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Robzanoid|Game Configuration");
 	float PaddleSpeedMultiplier = 2.0f;

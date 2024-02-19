@@ -13,7 +13,6 @@
 
 
 // Forward Declarations
-class UArrowComponent;
 class UCameraComponent;
 class UCapsuleComponent;
 class USceneComponent;
@@ -41,7 +40,7 @@ public:
 
 	FOnBallDestroyedSignature OnBallDestroyedDelegate;
 
-	EPaddleState GetPaddleState() const { return PaddleState; }
+	EPaddleLaunchState GetPaddleState() const { return PaddleState; }
 
 
 protected:
@@ -62,7 +61,7 @@ protected:
 	TObjectPtr<UCapsuleComponent> Capsule = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Robzanoid|Components")
-	TObjectPtr<UArrowComponent> LaunchPosition = nullptr;
+	TObjectPtr<USceneComponent> LaunchPosition = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Robzanoid|Components")
 	TObjectPtr<USplineComponent> Spline = nullptr;
@@ -77,7 +76,7 @@ protected:
 	TObjectPtr<UCurveFloat> MovePaddleCurve = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Robzanoid|Ball Properties")
-	TSubclassOf<ABall> Ball = nullptr;
+	TSubclassOf<ABall> BallClass = nullptr;
 
 
 private:
@@ -111,9 +110,11 @@ private:
 	void SetNewTimelineTime(UTimelineComponent* Timeline, const float NewTime = 0.0f);
 	void SetTimelinePlayRate(UTimelineComponent* Timeline, const float Rate = 1.0f);
 
-	EPaddleState PaddleState = EPaddleState::Setup;
+	EPaddleLaunchState PaddleState = EPaddleLaunchState::PreparingToLaunch;
 
 	UPROPERTY()
 	TObjectPtr<URobzanoidGameInstance> GameInstance = nullptr;
 
+	UPROPERTY()
+	TObjectPtr<ABall> Ball = nullptr;
 };

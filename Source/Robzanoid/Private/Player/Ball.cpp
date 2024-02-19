@@ -32,7 +32,7 @@ ABall::ABall()
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
-	ProjectileMovement->InitialSpeed = 1500.0f;
+	ProjectileMovement->InitialSpeed = 0.0f;
 	ProjectileMovement->MaxSpeed = 3500.0f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->ProjectileGravityScale = 0.0f;
@@ -42,9 +42,18 @@ ABall::ABall()
 	ProjectileMovement->MaxSimulationIterations = 12;
 	ProjectileMovement->bInterpMovement = true;
 	ProjectileMovement->bInterpRotation = true;
-	ProjectileMovement->Velocity = FVector(2.0f, 0.0f, 0.0f);
+	ProjectileMovement->Velocity = FVector::ZeroVector;
 	ProjectileMovement->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
 	ProjectileMovement->bConstrainToPlane = true;
+}
+
+void ABall::Launch(const float& InitialSpeed) const
+{
+	if (ProjectileMovement)
+	{
+		ProjectileMovement->InitialSpeed = InitialSpeed;
+		ProjectileMovement->Velocity = FVector::UpVector * InitialSpeed;
+	}
 }
 
 

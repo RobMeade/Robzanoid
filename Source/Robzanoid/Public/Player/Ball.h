@@ -24,6 +24,8 @@ public:
 
 	ABall();
 
+	void Launch(const float& InitialSpeed) const;
+
 
 protected:
 

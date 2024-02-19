@@ -122,5 +122,9 @@ void ARobzanoidSinglePlayerGameMode::OnBallDestroyed()
 		{
 			GameInstance->GameOver(CurrentPlayerState->GetPlayerStateData());
 		}
+		else
+		{
+			PlayerController->SpawnBall();
+		}
 	}
 }

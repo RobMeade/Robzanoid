@@ -36,6 +36,8 @@ public:
 	void UpdateHUDLives(const int32 Lives) const;
 	void UpdateHUDScore(const int32 Score) const;
 
+	void SpawnBall() const;
+
 
 protected:
 

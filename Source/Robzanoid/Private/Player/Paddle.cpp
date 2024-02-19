@@ -36,9 +36,8 @@ APaddle::APaddle()
 	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	Capsule->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 
-	LaunchPosition = CreateDefaultSubobject<UArrowComponent>("LaunchPosition");
+	LaunchPosition = CreateDefaultSubobject<USceneComponent>("LaunchPosition");
 	LaunchPosition->SetupAttachment(PaddleAnchor);
-	LaunchPosition->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
 
 	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 	Spline->SetupAttachment(DefaultSceneRoot);
@@ -96,9 +95,9 @@ void APaddle::Tick(float DeltaTime)
  */
 void APaddle::SpawnBall()
 {
-	if (Ball)
+	if (BallClass)
 	{
-		PaddleState = EPaddleState::Active;
+		PaddleState = EPaddleLaunchState::ReadyToLaunch;
 
 		const FTransform SpawnTransform = LaunchPosition->GetComponentTransform();
 
@@ -106,24 +105,33 @@ void APaddle::SpawnBall()
 		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		ActorSpawnParameters.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
 
-		ABall* NewBall = Cast<ABall>(GetWorld()->SpawnActor(Ball, &SpawnTransform, ActorSpawnParameters));
+		Ball = Cast<ABall>(GetWorld()->SpawnActor(BallClass, &SpawnTransform, ActorSpawnParameters));
 
-		if (NewBall)
+		if (Ball)
 		{
-			NewBall->OnDestroyed.AddDynamic(this, &APaddle::OnBallDestroyed);
+			Ball->OnDestroyed.AddDynamic(this, &APaddle::OnBallDestroyed);
+
+			FAttachmentTransformRules AttachmentTransformRules = FAttachmentTransformRules(EAttachmentRule::KeepWorld, false);
+
+			Ball->AttachToComponent(LaunchPosition, AttachmentTransformRules);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("APaddle::SpawnBall() - Ball is null.  Please check that the asset has been assigned within Class Defaults."))
+		UE_LOG(LogTemp, Error, TEXT("APaddle::SpawnBall() - BallClass is null.  Please check that the asset has been assigned within Class Defaults."))
 	}
 }
 
 void APaddle::LaunchBall()
 {
-	// Note:
-	// Ball will be spawned, if there are any lives left, after being destroyed
-	// LaunchBall() will set the speed/enable movement of the ProjectileMovementComponent.
+	if (GameInstance && Ball)
+	{
+		PaddleState = EPaddleLaunchState::Launched;
+
+		FDetachmentTransformRules DetachmentTransformRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, false);
+		Ball->DetachFromActor(DetachmentTransformRules);
+		Ball->Launch(GameInstance->GetDefaultBallSpeed());
+	}
 }
 
 void APaddle::MoveHorizontally(const float AxisValue)
@@ -190,11 +198,11 @@ void APaddle::MovePaddle(const float Value) const
 
 void APaddle::OnBallDestroyed(AActor* DestroyedActor)
 {
-	if (PaddleState == EPaddleState::Active)
+	if (PaddleState == EPaddleLaunchState::Launched)
 	{
-		bool bWasExecuted = OnBallDestroyedDelegate.ExecuteIfBound();
+		PaddleState = EPaddleLaunchState::PreparingToLaunch;
 
-		PaddleState = EPaddleState::Setup;
+		bool bWasExecuted = OnBallDestroyedDelegate.ExecuteIfBound();
 	}
 }
 
